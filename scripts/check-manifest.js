@@ -136,6 +136,8 @@ for (const [locale, catalog] of catalogs) {
   if (/host\s?groups?/i.test(JSON.stringify(catalog))) fail(`_locales/${locale}: nome obsoleto, usa "Tab by Host".`);
 }
 
+// Only runtime dependencies matter here: devDependencies such as ESLint are not
+// shipped with the extension and cannot run in the browser.
 if (pkg && Object.keys(pkg.dependencies ?? {}).length) {
   fail("package.json: dependencies non vuote. L'estensione deve restare senza codice di terze parti.");
 }
