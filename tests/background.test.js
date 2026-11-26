@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { CONFIG_KEY, defaultConfig } from "../core.js";
+import { CONFIG_KEY, STATUS_KEY, defaultConfig } from "../core.js";
 import { chromeHarness } from "./chrome-harness.js";
 
 const rule = (overrides = {}) => ({ id: "prod", host: "console.example.com", group: "Produzione", color: "red", enabled: true, includeSubdomains: false, ...overrides });
@@ -67,6 +67,24 @@ test("worker: installazione, eventi automatici, configurazione, pausa e recupero
     const response = await h.message({ type: "SAVE_CONFIG", config: { version: 99, rules: [] } });
     assert.equal(response.ok, false);
     assert.deepEqual(h.api.storage.local.data[CONFIG_KEY], before);
+  });
+
+  await t.test("un errore non cancella lo stato dell’ultima esecuzione riuscita", async () => {
+    const previous = h.api.storage.session.data[STATUS_KEY];
+    assert.equal(typeof previous.matched, "number", "lo stato di partenza deve avere matched");
+    const original = h.api.storage.local.set;
+    h.api.storage.local.set = async () => { throw new Error("storage non disponibile"); };
+    try {
+      const response = await h.message({ type: "SET_ENABLED", enabled: false });
+      assert.equal(response.ok, false);
+    } finally { h.api.storage.local.set = original; }
+    const status = h.api.storage.session.data[STATUS_KEY];
+    assert.equal(status.errors, 1);
+    assert.ok(status.message, "messaggio di errore mancante");
+    // The failure must not erase what the last reconciliation reported.
+    assert.equal(status.matched, previous.matched);
+    assert.equal(status.changed, previous.changed);
+    assert.equal(status.paused, previous.paused);
   });
 
   await t.test("l’allarme recupera un’operazione rimasta in sospeso", async () => {
