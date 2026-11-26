@@ -178,6 +178,9 @@ $("import-file").addEventListener("change", async () => {
   $("import-file").value = "";
 });
 $("cancel-import").addEventListener("click", () => { pendingImport = null; $("import-review").hidden = true; });
+// `enabled` from the file is ignored on purpose: importing rules must not
+// silently resume an automation the user had paused. Export is therefore not
+// an exact round-trip, and the README says so.
 $("confirm-import").addEventListener("click", async () => {
   if (pendingImport && await save({ ...pendingImport, enabled: config.enabled })) {
     pendingImport = null; $("import-review").hidden = true; resetEditor();
