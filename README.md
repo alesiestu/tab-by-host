@@ -146,6 +146,7 @@ npm test
 ```
 
 La suite controlla parsing e corrispondenza degli host, precedenza, raggruppamento in più finestre, navigazione tra ambienti, pause, aggiornamenti delle regole, errori temporanei ed eventi del service worker.
+Copre inoltre la logica delle impostazioni: prova di un indirizzo, importazione e riordino delle regole.
 I test del motore e del worker usano un simulatore delle API Chrome: la suite non sostituisce una prova dell’estensione dentro Chrome.
 
 Per il controllo statico del codice (richiede `npm install`, solo per lo sviluppo):

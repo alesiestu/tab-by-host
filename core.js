@@ -110,6 +110,29 @@ export function matchRule(urlValue, compiledRules) {
   ) || null;
 }
 
+// Pure half of the "check an address" box, so it can be tested without a DOM.
+// Rebuilding the URL from the parsed host is what makes a bare host testable:
+// matchRule needs an absolute URL, but the user may type just "example.com".
+export function resolveTestUrl(input) {
+  const parsed = parseHost(input);
+  return { parsed, url: /^https?:\/\//i.test(input.trim()) ? input.trim() : `http://${parsed.host}` };
+}
+
+// Import replaces the rules but keeps the current automation state: see options.js.
+export function applyImport(current, imported) {
+  return { ...imported, enabled: current.enabled };
+}
+
+// Swaps a rule with its neighbour. Returns null at the edges so callers can
+// treat "cannot move" explicitly instead of silently producing a bad order.
+export function reorderRules(rules, index, delta) {
+  const target = index + delta;
+  if (index < 0 || index >= rules.length || target < 0 || target >= rules.length) return null;
+  const next = [...rules];
+  [next[index], next[target]] = [next[target], next[index]];
+  return next;
+}
+
 export function matchingTab(tab, rules) {
   if (tab.pinned || tab.incognito) return null;
   return matchRule(tab.pendingUrl || tab.url, rules);

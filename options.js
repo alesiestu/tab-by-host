@@ -1,4 +1,4 @@
-import { COLORS, compileRules, defaultConfig, matchRule, normalizeConfig, parseHost, t } from "./core.js";
+import { COLORS, applyImport, compileRules, defaultConfig, matchRule, normalizeConfig, parseHost, reorderRules, resolveTestUrl, t } from "./core.js";
 import { localizeDocument } from "./i18n.js";
 
 const $ = id => document.getElementById(id);
@@ -84,8 +84,8 @@ function render() {
     const reorder = document.createElement("div"); reorder.className = "reorder";
     for (const [symbol, delta, label] of [["↑", -1, "rulePriorityUp"], ["↓", 1, "rulePriorityDown"]]) {
       const button = makeButton(symbol, async () => {
-        const rules = [...config.rules]; [rules[index], rules[index + delta]] = [rules[index + delta], rules[index]];
-        await save({ ...config, rules });
+        const rules = reorderRules(config.rules, index, delta);
+        if (rules) await save({ ...config, rules });
       }, "order-button");
       button.setAttribute("aria-label", t(label, rule.host));
       button.dataset.edge = String(index + delta < 0 || index + delta >= config.rules.length);
@@ -124,8 +124,7 @@ function updateTest() {
   const input = $("test-url").value.trim();
   if (!input) { $("test-result").textContent = ""; return; }
   try {
-    const parsed = parseHost(input);
-    const url = /^https?:\/\//i.test(input) ? input : `http://${parsed.host}`;
+    const { parsed, url } = resolveTestUrl(input);
     const rule = matchRule(url, compileRules(config.rules));
     $("test-result").textContent = rule
       ? t(config.enabled ? "testerMatch" : "testerMatchPaused", parsed.host, rule.group, COLORS[rule.color].label)
@@ -182,7 +181,7 @@ $("cancel-import").addEventListener("click", () => { pendingImport = null; $("im
 // silently resume an automation the user had paused. Export is therefore not
 // an exact round-trip, and the README says so.
 $("confirm-import").addEventListener("click", async () => {
-  if (pendingImport && await save({ ...pendingImport, enabled: config.enabled })) {
+  if (pendingImport && await save(applyImport(config, pendingImport))) {
     pendingImport = null; $("import-review").hidden = true; resetEditor();
   }
 });
