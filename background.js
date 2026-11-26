@@ -10,9 +10,13 @@ async function badge(config, errors = 0) {
   await chrome.action.setBadgeBackgroundColor({ color: errors ? "#b45309" : "#526176" });
 }
 
+// Merge, never replace: the last successful run still describes paused/matched/changed.
 async function reportError(error) {
   console.error("Host Groups:", error);
-  await chrome.storage.session.set({ [STATUS_KEY]: { errors: 1, at: Date.now(), message: "Operazione non riuscita. Riprova con Applica ora." } });
+  const stored = await chrome.storage.session.get(STATUS_KEY);
+  await chrome.storage.session.set({
+    [STATUS_KEY]: { ...stored[STATUS_KEY], errors: 1, at: Date.now(), message: "Operazione non riuscita. Riprova con Applica ora." }
+  });
   await chrome.action.setBadgeText({ text: "!" });
 }
 
