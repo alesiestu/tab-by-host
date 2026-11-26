@@ -1,4 +1,4 @@
-import { CONFIG_KEY, STATUS_KEY, defaultConfig, normalizeConfig } from "./core.js";
+import { CONFIG_KEY, STATUS_KEY, defaultConfig, normalizeConfig, t } from "./core.js";
 import { getConfig, reconcile } from "./engine.js";
 
 const RECOVERY_ALARM = "host-groups-recovery";
@@ -15,7 +15,7 @@ async function reportError(error) {
   console.error("Host Groups:", error);
   const stored = await chrome.storage.session.get(STATUS_KEY);
   await chrome.storage.session.set({
-    [STATUS_KEY]: { ...stored[STATUS_KEY], errors: 1, at: Date.now(), message: "Operazione non riuscita. Riprova con Applica ora." }
+    [STATUS_KEY]: { ...stored[STATUS_KEY], errors: 1, at: Date.now(), message: t("operationFailed") }
   });
   await chrome.action.setBadgeText({ text: "!" });
 }
@@ -78,7 +78,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
         return { config, result };
       }
       case "SET_ENABLED": {
-        if (typeof message.enabled !== "boolean") throw new Error("Stato non valido.");
+        if (typeof message.enabled !== "boolean") throw new Error(t("errInvalidState"));
         const config = await getConfig(chrome);
         config.enabled = message.enabled;
         await chrome.storage.local.set({ [CONFIG_KEY]: config });
@@ -86,7 +86,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
         return { config, result };
       }
       case "RECONCILE": return { result: await run({ force: true }) };
-      default: throw new Error("Richiesta non riconosciuta.");
+      default: throw new Error(t("errUnknownRequest"));
     }
   };
   // Reading state is cheap and must not wait for a long reconciliation.

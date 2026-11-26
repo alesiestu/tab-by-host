@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "Host Groups",
+  "name": "__MSG_extName__",
   "version": "1.0.0",
-  "description": "Raggruppa automaticamente le schede con regole per host, nome e colore. Ideale per staging e produzione.",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "minimum_chrome_version": "120",
   "permissions": ["tabs", "tabGroups", "storage", "alarms"],
   "background": { "service_worker": "background.js", "type": "module" },
   "action": {
-    "default_title": "Host Groups",
+    "default_title": "__MSG_actionTitle__",
     "default_popup": "popup.html",
     "default_icon": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" }
   },

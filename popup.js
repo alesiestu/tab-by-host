@@ -1,24 +1,26 @@
-import { COLORS, compileRules, matchRule } from "./core.js";
+import { COLORS, compileRules, matchRule, t } from "./core.js";
+import { localizeDocument } from "./i18n.js";
 const $ = id => document.getElementById(id);
 let config;
 async function request(type, extra = {}) {
   const response = await chrome.runtime.sendMessage({ type, ...extra });
-  if (!response?.ok) throw new Error(response?.error || "Ricarica l’estensione e riprova.");
+  if (!response?.ok) throw new Error(response?.error || t("reloadRetry"));
   return response;
 }
 async function render() {
   $("enabled").checked = config.enabled;
-  $("state").textContent = config.enabled ? "Automazione attiva" : "Automazione sospesa";
+  $("state").textContent = t(config.enabled ? "popupActive" : "popupPaused");
   const count = config.rules.filter(rule => rule.enabled).length;
-  $("rule-summary").textContent = `${count} ${count === 1 ? "regola attiva" : "regole attive"}`;
+  $("rule-summary").textContent = count === 1 ? t("popupRuleCountOne") : t("popupRuleCount", count);
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const url = tab?.pendingUrl || tab?.url;
   const rule = matchRule(url, compileRules(config.rules));
-  let host = "Questa scheda";
+  let host = t("popupThisTab");
   try { host = new URL(url).host || host; } catch { /* Internal Chrome page. */ }
-  $("active-host").textContent = `${host} → ${tab?.pinned ? "scheda fissata, esclusa" : rule?.group || "nessuna regola"}`;
+  $("active-host").textContent = `${host} → ${tab?.pinned ? t("popupPinned") : rule?.group || t("popupNoRule")}`;
   $("active-host").style.setProperty("--rule-color", rule ? COLORS[rule.color].hex : COLORS.grey.hex);
 }
+localizeDocument();
 // Read the version from the manifest: it must stay in one place only.
 $("version").textContent = chrome.runtime.getManifest().version;
 $("options").addEventListener("click", () => chrome.runtime.openOptionsPage());
@@ -30,7 +32,7 @@ $("enabled").addEventListener("change", async () => {
 });
 $("apply").addEventListener("click", async () => {
   $("apply").disabled = true;
-  try { const { result } = await request("RECONCILE"); $("status").textContent = `${result.matched} schede corrispondenti, ${result.changed} aggiornate.${result.errors ? " Alcune schede sono occupate: riprova tra poco." : ""}`; }
+  try { const { result } = await request("RECONCILE"); $("status").textContent = t("resultApplied", result.matched, result.changed) + (result.errors ? t("resultBusy") : ""); }
   catch (error) { $("status").textContent = error.message; }
   finally { $("apply").disabled = false; }
 });
