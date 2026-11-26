@@ -96,6 +96,11 @@ Per evitare che una regola ampia includa anche staging, usa host esatti oppure p
 Le impostazioni sono conservate localmente nel profilo di Chrome. Non vengono sincronizzate tra dispositivi.
 Il file esportato contiene i nomi degli host: conservalo come gli altri file di configurazione.
 
+L’importazione sostituisce **soltanto le regole**. Il file esportato contiene anche il campo `enabled`,
+ma all’importazione viene ignorato: lo stato attivo/sospeso resta quello corrente, così che importare delle
+regole non possa riattivare un’automazione che avevi messo in pausa. Il riepilogo di conferma lo ricorda.
+Di conseguenza esportare e reimportare non ripristina lo stato dell’automazione, solo l’elenco delle regole.
+
 L’estensione funziona interamente nel browser: nessun server, account, libreria remota o telemetria.
 Non esegue script nelle pagine e non legge password, cookie, moduli o contenuti dei siti.
 Gli indirizzi delle schede non vengono memorizzati: viene estratto l’host, confrontato con le regole e scartato.
