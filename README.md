@@ -23,11 +23,11 @@ Apri **Tab by Host → Gestisci regole** per aggiungere gli host.
 
 ## Installazione dal pacchetto ZIP
 
-1. Estrai `tab-by-host-chrome.zip` in una cartella stabile del computer.
+1. Scarica `tab-by-host-<versione>.zip` dalla [pagina delle release](https://github.com/alesiestu/tab-by-host/releases) ed estrailo in una cartella stabile del computer.
 2. Apri `chrome://extensions` in Chrome.
 3. Attiva **Modalità sviluppatore**, in alto a destra.
 4. Premi **Carica estensione non pacchettizzata**.
-5. Seleziona la cartella **tab-by-host** che contiene `manifest.json`.
+5. Seleziona la cartella estratta, quella che contiene `manifest.json`.
 6. Dal menu delle estensioni (puzzle), fissa **Tab by Host** alla barra.
 7. Apri l’estensione e premi **Gestisci regole**.
 
@@ -61,7 +61,7 @@ Per riunire più host nello stesso gruppo usa lo **stesso nome e colore** nelle 
 ## Cosa significa “host”
 
 - `progetto.example.com` corrisponde soltanto a questo hostname, su HTTP o HTTPS e su qualsiasi porta.
-- `staging.progetto.example.com` rimane separato, finché non attivi **Includi anche i sottodomini** sulla regola `console.example.com`.
+- `staging.progetto.example.com` rimane separato, finché non attivi **Includi anche i sottodomini** sulla regola `progetto.example.com`.
 - Abilitare i sottodomini include sia l’host stesso sia tutti i suoi sottodomini.
 - `localhost:3000` corrisponde soltanto alla porta 3000; `localhost` corrisponde a tutte le sue porte.
 - Sono supportati IP, host interni, IPv6 tra parentesi quadre e nomi internazionali.
@@ -154,6 +154,14 @@ Per il controllo statico del codice (richiede `npm install`, solo per lo svilupp
 ```sh
 npm run lint
 ```
+
+Per creare il pacchetto ZIP distribuibile:
+
+```sh
+npm run package
+```
+
+Include soltanto i file che Chrome carica: test, configurazione del lint e file di CI restano fuori.
 
 Per controllare `manifest.json` senza caricare l’estensione in Chrome:
 
