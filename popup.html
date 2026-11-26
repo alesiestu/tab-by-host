@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="it">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Host Groups</title><link rel="stylesheet" href="styles.css"><script type="module" src="popup.js"></script></head>
+<body class="popup-body">
+  <main class="popup">
+    <header class="popup-header"><span class="brand"><img src="icons/48.png" width="32" height="32" alt=""><span>Host Groups</span></span><span id="version" class="count">1.0</span></header>
+    <p class="popup-description">Ogni host, nel gruppo giusto.</p>
+    <div class="popup-toggle"><div><strong id="state">Caricamento…</strong><p id="rule-summary"></p></div><label class="switch"><input id="enabled" type="checkbox" aria-label="Raggruppamento automatico"><span class="switch-track"></span></label></div>
+    <div id="active-host" class="popup-host"></div>
+    <p id="status" class="field-help" role="status" aria-live="polite"></p>
+    <button id="options" class="button primary full">Gestisci regole</button><button id="apply" class="button secondary full">Applica alle schede aperte</button>
+    <p class="popup-footnote">Gruppi separati in ogni finestra.</p>
+  </main>
+</body></html>
