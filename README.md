@@ -50,8 +50,8 @@ Questi indirizzi sono soltanto esempi: sostituiscili con gli host reali.
 
 | Esempio di host | Gruppo | Colore |
 | --- | --- | --- |
-| `console.example.com` | Console · PRODUZIONE | Rosso |
-| `staging.example.com` | Console · STAGING | Arancione |
+| `progetto.example.com` | Progetto · PRODUZIONE | Rosso |
+| `staging.example.com` | Progetto · STAGING | Arancione |
 | `localhost:3000` | Sviluppo locale | Verde |
 
 Le regole si possono **modificare, sospendere, eliminare e riordinare**.
@@ -60,8 +60,8 @@ Per riunire più host nello stesso gruppo usa lo **stesso nome e colore** nelle 
 
 ## Cosa significa “host”
 
-- `console.example.com` corrisponde soltanto a questo hostname, su HTTP o HTTPS e su qualsiasi porta.
-- `staging.console.example.com` rimane separato, finché non attivi **Includi anche i sottodomini** sulla regola `console.example.com`.
+- `progetto.example.com` corrisponde soltanto a questo hostname, su HTTP o HTTPS e su qualsiasi porta.
+- `staging.progetto.example.com` rimane separato, finché non attivi **Includi anche i sottodomini** sulla regola `console.example.com`.
 - Abilitare i sottodomini include sia l’host stesso sia tutti i suoi sottodomini.
 - `localhost:3000` corrisponde soltanto alla porta 3000; `localhost` corrisponde a tutte le sue porte.
 - Sono supportati IP, host interni, IPv6 tra parentesi quadre e nomi internazionali.
