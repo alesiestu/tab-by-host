@@ -70,8 +70,9 @@ export function chromeHarness(initialTabs = [], initialGroups = []) {
   const alarmMap = new Map();
   api.alarms.get = async name => copy(alarmMap.get(name));
   api.alarms.create = async (name, info) => { alarmMap.set(name, { name, ...copy(info) }); };
+  api.alarms.clear = async name => alarmMap.delete(name);
   return {
-    api, tabs, groups, operations, failures,
+    api, tabs, groups, operations, failures, alarms: alarmMap,
     add(tab) { tabs.set(tab.id, { groupId: -1, windowId: 1, pinned: false, incognito: false, windowType: "normal", ...copy(tab) }); api.tabs.onCreated.emit(tabs.get(tab.id)); },
     navigate(id, url) { const tab = tabs.get(id); tab.url = url; delete tab.pendingUrl; api.tabs.onUpdated.emit(id, { url, status: "complete" }, tab); },
     close(id) { tabs.delete(id); cleanGroups(); api.tabs.onRemoved.emit(id, { windowId: 1 }); },
