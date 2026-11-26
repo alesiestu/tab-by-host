@@ -23,7 +23,8 @@ test("worker: installazione, eventi automatici, configurazione, pausa e recupero
     await eventually(() => Boolean(h.api.storage.local.data[CONFIG_KEY]), "configurazione iniziale mancante");
     const state = await h.message({ type: "GET_STATE" });
     assert.equal(state.ok, true); assert.deepEqual(state.config, defaultConfig());
-    assert.ok(await h.api.alarms.get("host-groups-recovery"));
+    // No rule yet: nothing to recover, so the worker must not be woken every minute.
+    assert.equal(await h.api.alarms.get("host-groups-recovery"), undefined);
   });
 
   await t.test("salvare una regola applica anche alle schede già aperte", async () => {
@@ -67,6 +68,25 @@ test("worker: installazione, eventi automatici, configurazione, pausa e recupero
     const response = await h.message({ type: "SAVE_CONFIG", config: { version: 99, rules: [] } });
     assert.equal(response.ok, false);
     assert.deepEqual(h.api.storage.local.data[CONFIG_KEY], before);
+  });
+
+  await t.test("l’allarme di recupero segue lo stato della configurazione", async () => {
+    // A rule is active from the previous subtests: the alarm must exist.
+    assert.ok(await h.api.alarms.get("host-groups-recovery"), "allarme mancante con regole attive");
+
+    await h.message({ type: "SET_ENABLED", enabled: false });
+    assert.equal(await h.api.alarms.get("host-groups-recovery"), undefined, "allarme attivo con automazione sospesa");
+
+    await h.message({ type: "SET_ENABLED", enabled: true });
+    assert.ok(await h.api.alarms.get("host-groups-recovery"), "allarme non ripristinato");
+
+    // Every rule disabled: a reconciliation can no longer change anything.
+    const config = h.api.storage.local.data[CONFIG_KEY];
+    await h.message({ type: "SAVE_CONFIG", config: { ...config, rules: config.rules.map(rule => ({ ...rule, enabled: false })) } });
+    assert.equal(await h.api.alarms.get("host-groups-recovery"), undefined, "allarme attivo senza regole abilitate");
+
+    await h.message({ type: "SAVE_CONFIG", config });
+    assert.ok(await h.api.alarms.get("host-groups-recovery"), "allarme non ricreato riattivando le regole");
   });
 
   await t.test("un errore non cancella lo stato dell’ultima esecuzione riuscita", async () => {

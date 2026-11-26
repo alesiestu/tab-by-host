@@ -28,9 +28,21 @@ function enqueue(task) {
   return pending;
 }
 
+// The recovery alarm only earns its keep when a reconciliation can actually
+// change something. With no active rule it would wake the worker every minute
+// for nothing, so it is created and cleared as the configuration changes.
+async function syncRecoveryAlarm(config) {
+  const needed = config.enabled && config.rules.some(rule => rule.enabled);
+  const existing = await chrome.alarms.get(RECOVERY_ALARM);
+  if (needed && !existing) await chrome.alarms.create(RECOVERY_ALARM, { periodInMinutes: 1 });
+  else if (!needed && existing) await chrome.alarms.clear(RECOVERY_ALARM);
+}
+
 async function run(options) {
   const result = await reconcile(chrome, options);
-  await badge(await getConfig(chrome), result.errors);
+  const config = await getConfig(chrome);
+  await badge(config, result.errors);
+  await syncRecoveryAlarm(config);
   return result;
 }
 
@@ -45,7 +57,6 @@ function schedule() {
 async function initialize() {
   const stored = await chrome.storage.local.get(CONFIG_KEY);
   if (!stored[CONFIG_KEY]) await chrome.storage.local.set({ [CONFIG_KEY]: defaultConfig() });
-  if (!await chrome.alarms.get(RECOVERY_ALARM)) await chrome.alarms.create(RECOVERY_ALARM, { periodInMinutes: 1 });
   await run();
 }
 
@@ -97,7 +108,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   return true;
 });
 
-// Check alarm state whenever Chrome revives this worker (also after an update).
-void chrome.alarms.get(RECOVERY_ALARM).then(alarm => {
-  if (!alarm) return chrome.alarms.create(RECOVERY_ALARM, { periodInMinutes: 1 });
-}).catch(error => reportError(error).catch(() => {}));
+// Realign the alarm whenever Chrome revives this worker (also after an update).
+// Reads the configuration instead of creating unconditionally: otherwise a
+// cleared alarm would come back by itself on the next revival.
+void getConfig(chrome).then(syncRecoveryAlarm).catch(error => reportError(error).catch(() => {}));

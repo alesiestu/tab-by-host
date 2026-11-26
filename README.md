@@ -87,6 +87,7 @@ Per evitare che una regola ampia includa anche staging, usa host esatti oppure p
 - Il pulsante di pausa lascia i gruppi attuali e sospende i successivi aggiornamenti automatici.
 - **Applica ora** applica le regole una volta anche se l’automazione è sospesa.
 - Se Chrome sta trascinando una scheda o ripristinando una sessione, un controllo di recupero ogni minuto ritenta il raggruppamento.
+- Il controllo di recupero è attivo solo quando serve: con l’automazione sospesa o senza regole attive viene disattivato, per non risvegliare l’estensione inutilmente.
 - I gruppi vuoti spariscono secondo il comportamento normale di Chrome.
 
 ## Backup e dati
