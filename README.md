@@ -126,6 +126,15 @@ npm test
 La suite controlla parsing e corrispondenza degli host, precedenza, raggruppamento in più finestre, navigazione tra ambienti, pause, aggiornamenti delle regole, errori temporanei ed eventi del service worker.
 I test del motore e del worker usano un simulatore delle API Chrome: la suite non sostituisce una prova dell’estensione dentro Chrome.
 
+Per controllare `manifest.json` senza caricare l’estensione in Chrome:
+
+```sh
+npm run check:manifest
+```
+
+Il controllo verifica versione allineata a `package.json`, file referenziati esistenti, permessi attesi e direttive CSP.
+Entrambi i comandi vengono eseguiti automaticamente su ogni push e pull request.
+
 Verifica iniziale consigliata nel browser:
 
 1. Aggiungi due regole per due host di prova distinti, con nomi e colori differenti.
