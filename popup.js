@@ -19,6 +19,8 @@ async function render() {
   $("active-host").textContent = `${host} → ${tab?.pinned ? "scheda fissata, esclusa" : rule?.group || "nessuna regola"}`;
   $("active-host").style.setProperty("--rule-color", rule ? COLORS[rule.color].hex : COLORS.grey.hex);
 }
+// Read the version from the manifest: it must stay in one place only.
+$("version").textContent = chrome.runtime.getManifest().version;
 $("options").addEventListener("click", () => chrome.runtime.openOptionsPage());
 $("enabled").addEventListener("change", async () => {
   $("enabled").disabled = true;
