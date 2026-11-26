@@ -113,6 +113,16 @@ Disattivare o rimuovere l’estensione interrompe l’automazione. I gruppi di C
 
 Se Chrome è gestito dall’azienda e blocca le estensioni non pacchettizzate, l’installazione richiede la distribuzione tramite le policy aziendali.
 
+## Lingue
+
+L’interfaccia è disponibile in **inglese** (lingua predefinita) e in **italiano**.
+Chrome sceglie automaticamente in base alla lingua del browser: se è impostato su italiano vedrai l’italiano, in tutti gli altri casi l’inglese.
+Per cambiarla, modifica la lingua di Chrome da `chrome://settings/languages` e riavvia il browser.
+
+I testi stanno in `_locales/<lingua>/messages.json`.
+Per aggiungere una lingua, copia `_locales/en/messages.json` in una nuova cartella e traduci i valori `message`, lasciando invariate le chiavi e i segnaposto come `$HOST$`.
+Il controllo `npm run check:manifest` verifica che tutte le lingue abbiano le stesse chiavi e gli stessi segnaposto.
+
 ## Verifiche e sviluppo
 
 Richiede Chrome 120 o successivo. Nessuna compilazione o dipendenza è necessaria per l’installazione.
@@ -134,7 +144,7 @@ Per controllare `manifest.json` senza caricare l’estensione in Chrome:
 npm run check:manifest
 ```
 
-Il controllo verifica versione allineata a `package.json`, file referenziati esistenti, permessi attesi e direttive CSP.
+Il controllo verifica versione allineata a `package.json`, file referenziati esistenti, permessi attesi, direttive CSP e coerenza delle traduzioni.
 Verifica inoltre le promesse di [PRIVACY.md](PRIVACY.md): assenza di chiamate di rete, di `chrome.storage.sync` e di dipendenze di terze parti.
 Entrambi i comandi vengono eseguiti automaticamente su ogni push e pull request.
 

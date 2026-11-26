@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Host Groups · Impostazioni</title>
+  <title data-i18n-title-text="optionsTitle">Host Groups</title>
   <link rel="icon" href="icons/32.png">
   <link rel="stylesheet" href="styles.css">
   <script type="module" src="options.js"></script>
@@ -11,48 +11,48 @@
 <body>
   <main class="shell">
     <header class="topbar">
-      <a class="brand" href="options.html"><img src="icons/48.png" width="36" height="36" alt=""><span>Host Groups</span></a>
-      <span class="local-label"><span class="dot"></span> Tutto nel tuo browser</span>
+      <a class="brand" href="options.html"><img src="icons/48.png" width="36" height="36" alt=""><span data-i18n="extName">Host Groups</span></a>
+      <span class="local-label"><span class="dot"></span> <span data-i18n="localLabel"></span></span>
     </header>
     <div class="intro">
-      <div><p class="eyebrow">IMPOSTAZIONI</p><h1>Ogni host al suo posto.</h1><p class="subtitle">Definisci le regole. Le schede entrano nel gruppo giusto, automaticamente.</p></div>
-      <button id="apply" class="button secondary">Applica ora</button>
+      <div><p class="eyebrow" data-i18n="settingsEyebrow"></p><h1 data-i18n="settingsHeading"></h1><p class="subtitle" data-i18n="settingsSubtitle"></p></div>
+      <button id="apply" class="button secondary" data-i18n="applyNow"></button>
     </div>
-    <section class="automation panel" aria-label="Stato del raggruppamento">
-      <div class="automation-copy"><span id="automation-dot" class="status-dot"></span><div><strong>Raggruppamento automatico</strong><p id="automation-hint">Nuove schede e cambi di host, nella stessa finestra.</p></div></div>
-      <label class="switch"><input type="checkbox" id="enabled" aria-label="Raggruppamento automatico"><span class="switch-track"></span></label>
+    <section class="automation panel" data-i18n-aria="automationTitle">
+      <div class="automation-copy"><span id="automation-dot" class="status-dot"></span><div><strong data-i18n="automationTitle"></strong><p id="automation-hint"></p></div></div>
+      <label class="switch"><input type="checkbox" id="enabled" data-i18n-aria="automationAria"><span class="switch-track"></span></label>
     </section>
     <div id="message" class="message" role="status" aria-live="polite" hidden></div>
     <div class="layout">
       <section class="rules-section" aria-labelledby="rules-heading">
-        <div class="section-heading"><div><h2 id="rules-heading">Le tue regole <span id="rule-count" class="count">0</span></h2><p>La prima regola attiva che corrisponde all’host ha la precedenza.</p></div><button id="add-rule" class="button secondary">+ Aggiungi regola</button></div>
+        <div class="section-heading"><div><h2 id="rules-heading"><span data-i18n="rulesHeading"></span> <span id="rule-count" class="count">0</span></h2><p data-i18n="rulesPrecedence"></p></div><button id="add-rule" class="button secondary" data-i18n="addRule"></button></div>
         <div id="rules-list" class="rules-list"></div>
         <div id="empty" class="empty panel">
-          <div class="empty-icon" aria-hidden="true">＋</div><h3>Inizia dal primo host</h3><p>Per esempio, associa <code>staging.example.com</code><br>al gruppo <strong>Staging</strong> in arancione.</p><button id="first-rule" class="button primary">Aggiungi una regola</button>
+          <div class="empty-icon" aria-hidden="true">＋</div><h3 data-i18n="emptyHeading"></h3><p><span data-i18n="emptyBodyBefore"></span> <code>staging.example.com</code><br><span data-i18n="emptyBodyAfter"></span> <strong>Staging</strong> <span data-i18n="emptyBodyColor"></span></p><button id="first-rule" class="button primary" data-i18n="emptyAction"></button>
         </div>
         <section class="panel tester" aria-labelledby="tester-heading">
-          <h2 id="tester-heading">Prova un indirizzo</h2><p>Scopri quale regola verrà applicata, senza aprire una scheda.</p>
-          <form id="test-form" class="test-row"><label class="sr-only" for="test-url">Host o indirizzo da provare</label><input id="test-url" placeholder="https://staging.example.com/dashboard" spellcheck="false"><button class="button secondary" type="submit">Verifica</button></form>
+          <h2 id="tester-heading" data-i18n="testerHeading"></h2><p data-i18n="testerBody"></p>
+          <form id="test-form" class="test-row"><label class="sr-only" for="test-url" data-i18n="testerLabel"></label><input id="test-url" placeholder="https://staging.example.com/dashboard" spellcheck="false"><button class="button secondary" type="submit" data-i18n="testerSubmit"></button></form>
           <p id="test-result" class="test-result" role="status"></p>
         </section>
-        <div class="backup-row"><span>Le regole restano salvate su questo profilo.</span><div><button id="export" class="text-button">Esporta JSON</button><button id="import" class="text-button">Importa JSON</button><input id="import-file" type="file" accept=".json,application/json" hidden></div></div>
-        <section id="import-review" class="panel import-review" hidden><h3>Importazione pronta</h3><p id="import-summary"></p><div class="form-actions"><button id="confirm-import" class="button primary">Sostituisci le regole</button><button id="cancel-import" class="button secondary">Annulla</button></div></section>
+        <div class="backup-row"><span data-i18n="backupNote"></span><div><button id="export" class="text-button" data-i18n="exportJson"></button><button id="import" class="text-button" data-i18n="importJson"></button><input id="import-file" type="file" accept=".json,application/json" hidden></div></div>
+        <section id="import-review" class="panel import-review" hidden><h3 data-i18n="importHeading"></h3><p id="import-summary"></p><div class="form-actions"><button id="confirm-import" class="button primary" data-i18n="importConfirm"></button><button id="cancel-import" class="button secondary" data-i18n="cancel"></button></div></section>
       </section>
       <aside class="editor panel" aria-labelledby="editor-heading">
-        <p class="eyebrow" id="editor-eyebrow">NUOVA REGOLA</p><h2 id="editor-heading">Aggiungi un host</h2>
+        <p class="eyebrow" id="editor-eyebrow"></p><h2 id="editor-heading"></h2>
         <form id="rule-form">
-          <label class="field-label" for="host">Host</label><input id="host" name="host" placeholder="staging.example.com" required spellcheck="false" autocomplete="off" maxlength="2048" aria-describedby="host-help"><p id="host-help" class="field-help">Host esatto, IP o localhost. Puoi specificare una porta o incollare un URL completo.</p>
-          <label class="check"><input id="subdomains" type="checkbox"><span>Includi anche i sottodomini</span></label>
-          <label class="field-label" for="group">Nome del gruppo</label><input id="group" name="group" placeholder="Staging" required maxlength="60" autocomplete="off">
-          <label class="field-label" for="color">Colore</label><select id="color" name="color" aria-describedby="preview-description"></select>
-          <div class="preview-box"><span class="preview-caption">ANTEPRIMA</span><span id="preview" class="group-preview"><span class="dot"></span><span id="preview-name">Staging</span></span></div><p id="preview-description" class="field-help">Usa nomi riconoscibili insieme ai colori.</p>
+          <label class="field-label" for="host" data-i18n="fieldHost"></label><input id="host" name="host" placeholder="staging.example.com" required spellcheck="false" autocomplete="off" maxlength="2048" aria-describedby="host-help"><p id="host-help" class="field-help" data-i18n="fieldHostHelp"></p>
+          <label class="check"><input id="subdomains" type="checkbox"><span data-i18n="fieldSubdomains"></span></label>
+          <label class="field-label" for="group" data-i18n="fieldGroup"></label><input id="group" name="group" placeholder="Staging" required maxlength="60" autocomplete="off">
+          <label class="field-label" for="color" data-i18n="fieldColor"></label><select id="color" name="color" aria-describedby="preview-description"></select>
+          <div class="preview-box"><span class="preview-caption" data-i18n="previewCaption"></span><span id="preview" class="group-preview"><span class="dot"></span><span id="preview-name"></span></span></div><p id="preview-description" class="field-help" data-i18n="previewHelp"></p>
           <p id="form-error" class="form-error" role="alert" hidden></p>
-          <div class="form-actions"><button id="save-rule" class="button primary" type="submit">Salva regola</button><button id="cancel-edit" class="button secondary" type="button" hidden>Annulla</button></div>
+          <div class="form-actions"><button id="save-rule" class="button primary" type="submit"></button><button id="cancel-edit" class="button secondary" type="button" data-i18n="cancel" hidden></button></div>
         </form>
-        <div class="editor-note"><strong>Un gruppo, più host</strong><p>Assegna lo stesso nome e lo stesso colore a più regole per riunire, per esempio, frontend e API.</p></div>
+        <div class="editor-note"><strong data-i18n="tipHeading"></strong><p data-i18n="tipBody"></p></div>
       </aside>
     </div>
-    <footer>Host Groups 1.0 · Le schede fissate sono escluse. I gruppi rimangono nella loro finestra.</footer>
+    <footer><span data-i18n="extName">Host Groups</span> <span id="footer-version"></span> · <span data-i18n="footer"></span></footer>
   </main>
 </body>
 </html>

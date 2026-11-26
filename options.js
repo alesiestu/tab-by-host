@@ -1,4 +1,5 @@
-import { COLORS, compileRules, defaultConfig, matchRule, normalizeConfig, parseHost } from "./core.js";
+import { COLORS, compileRules, defaultConfig, matchRule, normalizeConfig, parseHost, t } from "./core.js";
+import { localizeDocument } from "./i18n.js";
 
 const $ = id => document.getElementById(id);
 let config = defaultConfig();
@@ -9,7 +10,7 @@ const deleteArmed = new Set();
 
 async function request(type, extra = {}) {
   const response = await chrome.runtime.sendMessage({ type, ...extra });
-  if (!response?.ok) throw new Error(response?.error || "L’estensione non risponde. Ricarica la pagina e riprova.");
+  if (!response?.ok) throw new Error(response?.error || t("notResponding"));
   return response;
 }
 
@@ -26,14 +27,14 @@ function setBusy(value) {
   for (const input of document.querySelectorAll(".rule-card input")) input.disabled = value;
 }
 
-async function save(next, success = "Regole salvate e applicate.") {
+async function save(next, success = t("savedApplied")) {
   if (busy) return false;
   setBusy(true);
   try {
     const response = await request("SAVE_CONFIG", { config: normalizeConfig(next) });
     config = response.config;
     render();
-    message(response.result?.errors ? "Regole salvate. Alcune schede sono occupate: il raggruppamento verrà ritentato." : config.enabled ? success : "Regole salvate. Il raggruppamento automatico è sospeso.");
+    message(response.result?.errors ? t("savedBusy") : config.enabled ? success : t("savedPaused"));
     return true;
   } catch (error) { message(error.message, true); return false; }
   finally { setBusy(false); }
@@ -51,7 +52,7 @@ function makeButton(label, action, className = "text-button") {
 function render() {
   $("enabled").checked = config.enabled;
   $("automation-dot").classList.toggle("paused", !config.enabled);
-  $("automation-hint").textContent = config.enabled ? "Nuove schede e cambi di host, nella stessa finestra." : "In pausa. I gruppi già creati rimangono al loro posto.";
+  $("automation-hint").textContent = t(config.enabled ? "automationOn" : "automationOff");
   $("rule-count").textContent = String(config.rules.length);
   $("empty").hidden = config.rules.length > 0;
   $("rules-list").replaceChildren();
@@ -66,27 +67,27 @@ function render() {
     const mark = document.createElement("span"); mark.className = "dot";
     identity.append(order, mark, name);
     const stateLabel = document.createElement("label"); stateLabel.className = "check compact";
-    const enabled = document.createElement("input"); enabled.type = "checkbox"; enabled.checked = rule.enabled; enabled.setAttribute("aria-label", `Attiva la regola ${rule.host}`);
+    const enabled = document.createElement("input"); enabled.type = "checkbox"; enabled.checked = rule.enabled; enabled.setAttribute("aria-label", t("ruleEnableAria", rule.host));
     enabled.addEventListener("change", async () => { await save({ ...config, rules: config.rules.map(item => item.id === rule.id ? { ...item, enabled: enabled.checked } : item) }); render(); });
-    const stateText = document.createElement("span"); stateText.textContent = rule.enabled ? "Attiva" : "Sospesa";
+    const stateText = document.createElement("span"); stateText.textContent = t(rule.enabled ? "ruleActive" : "rulePaused");
     stateLabel.append(enabled, stateText); header.append(identity, stateLabel);
     const host = document.createElement("code"); host.className = "rule-host"; host.textContent = rule.host;
-    const detail = document.createElement("p"); detail.className = "rule-detail"; detail.textContent = rule.includeSubdomains ? "Host + sottodomini" : "Solo questo host";
+    const detail = document.createElement("p"); detail.className = "rule-detail"; detail.textContent = t(rule.includeSubdomains ? "ruleWithSubdomains" : "ruleHostOnly");
     const actions = document.createElement("div"); actions.className = "rule-actions";
-    actions.append(makeButton("Modifica", () => edit(rule)), makeButton(deleteArmed.has(rule.id) ? "Conferma eliminazione" : "Elimina", async () => {
+    actions.append(makeButton(t("ruleEdit"), () => edit(rule)), makeButton(t(deleteArmed.has(rule.id) ? "ruleDeleteConfirm" : "ruleDelete"), async () => {
       if (!deleteArmed.has(rule.id)) { deleteArmed.add(rule.id); render(); return; }
       if (await save({ ...config, rules: config.rules.filter(item => item.id !== rule.id) })) {
         deleteArmed.delete(rule.id); if (editingId === rule.id) resetEditor();
       }
     }, "text-button danger"));
-    if (deleteArmed.has(rule.id)) actions.append(makeButton("Annulla", () => { deleteArmed.delete(rule.id); render(); }));
+    if (deleteArmed.has(rule.id)) actions.append(makeButton(t("cancel"), () => { deleteArmed.delete(rule.id); render(); }));
     const reorder = document.createElement("div"); reorder.className = "reorder";
-    for (const [symbol, delta, label] of [["↑", -1, "Aumenta priorità"], ["↓", 1, "Riduci priorità"]]) {
+    for (const [symbol, delta, label] of [["↑", -1, "rulePriorityUp"], ["↓", 1, "rulePriorityDown"]]) {
       const button = makeButton(symbol, async () => {
         const rules = [...config.rules]; [rules[index], rules[index + delta]] = [rules[index + delta], rules[index]];
         await save({ ...config, rules });
       }, "order-button");
-      button.setAttribute("aria-label", `${label}: ${rule.host}`);
+      button.setAttribute("aria-label", t(label, rule.host));
       button.dataset.edge = String(index + delta < 0 || index + delta >= config.rules.length);
       button.disabled = button.dataset.edge === "true";
       reorder.append(button);
@@ -99,9 +100,9 @@ function render() {
 function resetEditor(focus = false) {
   editingId = null;
   $("rule-form").reset(); $("color").value = "orange";
-  $("editor-heading").textContent = "Aggiungi un host";
-  $("editor-eyebrow").textContent = "NUOVA REGOLA";
-  $("save-rule").textContent = "Salva regola";
+  $("editor-heading").textContent = t("editorNewHeading");
+  $("editor-eyebrow").textContent = t("editorNewEyebrow");
+  $("save-rule").textContent = t("saveRule");
   $("cancel-edit").hidden = true; $("form-error").hidden = true;
   updatePreview(); if (focus) $("host").focus();
 }
@@ -109,13 +110,13 @@ function resetEditor(focus = false) {
 function edit(rule) {
   editingId = rule.id; $("host").value = rule.host; $("group").value = rule.group;
   $("color").value = rule.color; $("subdomains").checked = rule.includeSubdomains;
-  $("editor-heading").textContent = "Modifica la regola"; $("editor-eyebrow").textContent = "MODIFICA";
-  $("save-rule").textContent = "Salva modifiche"; $("cancel-edit").hidden = false; $("form-error").hidden = true;
+  $("editor-heading").textContent = t("editorEditHeading"); $("editor-eyebrow").textContent = t("editorEditEyebrow");
+  $("save-rule").textContent = t("saveChanges"); $("cancel-edit").hidden = false; $("form-error").hidden = true;
   updatePreview(); $("host").focus();
 }
 
 function updatePreview() {
-  $("preview-name").textContent = $("group").value.trim() || "Staging";
+  $("preview-name").textContent = $("group").value.trim() || t("previewPlaceholder");
   $("preview").style.setProperty("--rule-color", COLORS[$("color").value]?.hex || COLORS.orange.hex);
 }
 
@@ -126,7 +127,9 @@ function updateTest() {
     const parsed = parseHost(input);
     const url = /^https?:\/\//i.test(input) ? input : `http://${parsed.host}`;
     const rule = matchRule(url, compileRules(config.rules));
-    $("test-result").textContent = rule ? `${parsed.host} → ${rule.group} · ${COLORS[rule.color].label}${config.enabled ? "" : " (automazione sospesa)"}` : `${parsed.host}: nessuna regola attiva corrispondente.`;
+    $("test-result").textContent = rule
+      ? t(config.enabled ? "testerMatch" : "testerMatchPaused", parsed.host, rule.group, COLORS[rule.color].label)
+      : t("testerNoMatch", parsed.host);
     $("test-result").style.color = rule ? COLORS[rule.color].hex : "";
   } catch (error) { $("test-result").textContent = error.message; $("test-result").style.color = ""; }
 }
@@ -152,7 +155,7 @@ $("apply").addEventListener("click", async () => {
   if (busy) return; setBusy(true);
   try {
     const { result } = await request("RECONCILE");
-    message(`${result.matched} schede corrispondenti · ${result.changed} aggiornate.${result.errors ? " Alcune schede sono occupate: riprova tra poco." : ""}`);
+    message(t("resultApplied", result.matched, result.changed) + (result.errors ? t("resultBusy") : ""));
   } catch (error) { message(error.message, true); } finally { setBusy(false); }
 });
 $("test-form").addEventListener("submit", event => { event.preventDefault(); updateTest(); });
@@ -160,18 +163,18 @@ $("test-url").addEventListener("input", updateTest);
 $("export").addEventListener("click", () => {
   const blob = new Blob([JSON.stringify(config, null, 2) + "\n"], { type: "application/json" });
   const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
-  anchor.href = url; anchor.download = "host-groups-regole.json"; anchor.click();
+  anchor.href = url; anchor.download = "host-groups-rules.json"; anchor.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 $("import").addEventListener("click", () => $("import-file").click());
 $("import-file").addEventListener("change", async () => {
   const file = $("import-file").files[0]; if (!file) return;
   try {
-    if (file.size > 1024 * 1024) throw new Error("Il file è troppo grande (massimo 1 MB).");
+    if (file.size > 1024 * 1024) throw new Error(t("importTooLarge"));
     pendingImport = normalizeConfig(JSON.parse(await file.text()));
-    $("import-summary").textContent = `Il file contiene ${pendingImport.rules.length} regole. Confermando sostituirai le ${config.rules.length} regole attuali. Lo stato attivo/sospeso attuale verrà mantenuto.`;
+    $("import-summary").textContent = t("importSummary", pendingImport.rules.length, config.rules.length);
     $("import-review").hidden = false;
-  } catch (error) { message(`Importazione non riuscita: ${error.message}`, true); }
+  } catch (error) { message(t("importFailed", error.message), true); }
   $("import-file").value = "";
 });
 $("cancel-import").addEventListener("click", () => { pendingImport = null; $("import-review").hidden = true; });
@@ -181,6 +184,8 @@ $("confirm-import").addEventListener("click", async () => {
   }
 });
 
+localizeDocument();
+$("footer-version").textContent = chrome.runtime.getManifest().version;
 resetEditor();
 try { config = (await request("GET_STATE")).config; render(); }
 catch (error) { message(error.message, true); }
