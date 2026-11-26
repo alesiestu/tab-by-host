@@ -130,6 +130,7 @@ Il controllo `npm run check:manifest` verifica che tutte le lingue abbiano le st
 ## Verifiche e sviluppo
 
 Richiede Chrome 120 o successivo. Nessuna compilazione o dipendenza è necessaria per l’installazione.
+ESLint è l’unica dipendenza, di sviluppo: non viene distribuita con l’estensione.
 I sorgenti sono JavaScript standard e Manifest V3.
 
 Per eseguire i test con Node.js 20 o successivo:
@@ -141,6 +142,12 @@ npm test
 
 La suite controlla parsing e corrispondenza degli host, precedenza, raggruppamento in più finestre, navigazione tra ambienti, pause, aggiornamenti delle regole, errori temporanei ed eventi del service worker.
 I test del motore e del worker usano un simulatore delle API Chrome: la suite non sostituisce una prova dell’estensione dentro Chrome.
+
+Per il controllo statico del codice (richiede `npm install`, solo per lo sviluppo):
+
+```sh
+npm run lint
+```
 
 Per controllare `manifest.json` senza caricare l’estensione in Chrome:
 

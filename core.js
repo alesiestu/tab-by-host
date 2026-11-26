@@ -70,12 +70,14 @@ export function normalizeConfig(input) {
     const prefix = t("errRulePrefix", index + 1);
     if (!rule || typeof rule !== "object") throw new Error(prefix + t("errRuleData"));
     let parsed;
-    try { parsed = parseHost(rule.host); } catch (error) { throw new Error(prefix + error.message); }
+    try { parsed = parseHost(rule.host); } catch (error) { throw new Error(prefix + error.message, { cause: error }); }
     if (typeof rule.id !== "string" || !/^[a-zA-Z0-9_-]{1,80}$/.test(rule.id) || ids.has(rule.id)) {
       throw new Error(prefix + t("errRuleId"));
     }
     ids.add(rule.id);
     const group = typeof rule.group === "string" ? rule.group.trim() : "";
+    // Control characters would corrupt the group title: rejected on purpose.
+    // eslint-disable-next-line no-control-regex
     if (!group || group.length > 60 || /[\u0000-\u001f\u007f]/.test(group)) {
       throw new Error(prefix + t("errRuleGroup"));
     }
