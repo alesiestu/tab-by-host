@@ -1,9 +1,9 @@
 {
-  "extName": { "message": "Host Groups", "description": "Extension name." },
+  "extName": { "message": "Tab by Host", "description": "Extension name." },
   "extDescription": { "message": "Automatically group tabs with rules for host, name and color. Ideal for staging and production.", "description": "Store description." },
-  "actionTitle": { "message": "Host Groups" },
+  "actionTitle": { "message": "Tab by Host" },
 
-  "optionsTitle": { "message": "Host Groups · Settings" },
+  "optionsTitle": { "message": "Tab by Host · Settings" },
   "localLabel": { "message": "Everything stays in your browser" },
   "settingsEyebrow": { "message": "SETTINGS" },
   "settingsHeading": { "message": "Every host in its place." },

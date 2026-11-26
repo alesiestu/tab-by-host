@@ -1,4 +1,4 @@
-# Host Groups
+# Tab by Host
 
 [![test](https://github.com/alesiestu/tab-by-host/actions/workflows/test.yml/badge.svg)](https://github.com/alesiestu/tab-by-host/actions/workflows/test.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -19,16 +19,16 @@ cd tab-by-host
 Apri `chrome://extensions`, attiva **Modalità sviluppatore**, premi
 **Carica estensione non pacchettizzata** e seleziona la cartella della repository
 che contiene `manifest.json`. Non sono necessari `npm install` o una compilazione.
-Apri **Host Groups → Gestisci regole** per aggiungere gli host.
+Apri **Tab by Host → Gestisci regole** per aggiungere gli host.
 
 ## Installazione dal pacchetto ZIP
 
-1. Estrai `host-groups-chrome.zip` in una cartella stabile del computer.
+1. Estrai `tab-by-host-chrome.zip` in una cartella stabile del computer.
 2. Apri `chrome://extensions` in Chrome.
 3. Attiva **Modalità sviluppatore**, in alto a destra.
 4. Premi **Carica estensione non pacchettizzata**.
-5. Seleziona la cartella **host-groups** che contiene `manifest.json`.
-6. Dal menu delle estensioni (puzzle), fissa **Host Groups** alla barra.
+5. Seleziona la cartella **tab-by-host** che contiene `manifest.json`.
+6. Dal menu delle estensioni (puzzle), fissa **Tab by Host** alla barra.
 7. Apri l’estensione e premi **Gestisci regole**.
 
 La cartella deve rimanere sul computer: Chrome carica l’estensione da lì.

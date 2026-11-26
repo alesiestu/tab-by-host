@@ -122,6 +122,20 @@ if (reference) {
   }
 }
 
+// The extension is "Tab by Host". Storage keys and the alarm keep their original
+// names for backward compatibility, so they are explicitly allowed here.
+const legacyAllowed = /hostGroups(Config|Session|Status)|host-groups-recovery/;
+for (const name of [...sources, "options.html", "popup.html", "README.md", "PRIVACY.md"]) {
+  const source = await readFile(resolve(root, name), "utf8").catch(() => "");
+  for (const [index, line] of source.split("\n").entries()) {
+    const stripped = line.replace(new RegExp(legacyAllowed, "g"), "");
+    if (/host[\s-]?groups?\b/i.test(stripped)) fail(`${name}:${index + 1}: nome obsoleto, usa "Tab by Host".`);
+  }
+}
+for (const [locale, catalog] of catalogs) {
+  if (/host\s?groups?/i.test(JSON.stringify(catalog))) fail(`_locales/${locale}: nome obsoleto, usa "Tab by Host".`);
+}
+
 if (pkg && Object.keys(pkg.dependencies ?? {}).length) {
   fail("package.json: dependencies non vuote. L'estensione deve restare senza codice di terze parti.");
 }

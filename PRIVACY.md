@@ -1,6 +1,6 @@
 # Informativa sulla privacy
 
-**Host Groups** funziona interamente nel browser. Non raccoglie, non trasmette e non vende alcun dato.
+**Tab by Host** funziona interamente nel browser. Non raccoglie, non trasmette e non vende alcun dato.
 
 Ultimo aggiornamento: 26 novembre 2026 · Versione estensione: 1.0.0
 

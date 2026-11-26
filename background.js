@@ -1,6 +1,8 @@
 import { CONFIG_KEY, STATUS_KEY, defaultConfig, normalizeConfig, t } from "./core.js";
 import { getConfig, reconcile } from "./engine.js";
 
+// Keeps its original name: a rename would leave the old alarm registered
+// in profiles that already installed the extension.
 const RECOVERY_ALARM = "host-groups-recovery";
 let queue = Promise.resolve();
 let timer = null;
@@ -12,7 +14,7 @@ async function badge(config, errors = 0) {
 
 // Merge, never replace: the last successful run still describes paused/matched/changed.
 async function reportError(error) {
-  console.error("Host Groups:", error);
+  console.error("Tab by Host:", error);
   const stored = await chrome.storage.session.get(STATUS_KEY);
   await chrome.storage.session.set({
     [STATUS_KEY]: { ...stored[STATUS_KEY], errors: 1, at: Date.now(), message: t("operationFailed") }

@@ -1,9 +1,9 @@
 {
-  "extName": { "message": "Host Groups", "description": "Extension name." },
+  "extName": { "message": "Tab by Host", "description": "Extension name." },
   "extDescription": { "message": "Raggruppa automaticamente le schede con regole per host, nome e colore. Ideale per staging e produzione.", "description": "Store description." },
-  "actionTitle": { "message": "Host Groups" },
+  "actionTitle": { "message": "Tab by Host" },
 
-  "optionsTitle": { "message": "Host Groups · Impostazioni" },
+  "optionsTitle": { "message": "Tab by Host · Impostazioni" },
   "localLabel": { "message": "Tutto nel tuo browser" },
   "settingsEyebrow": { "message": "IMPOSTAZIONI" },
   "settingsHeading": { "message": "Ogni host al suo posto." },
