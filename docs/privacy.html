@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy · Tab by Host</title>
+<meta name="description" content="Privacy policy for the Tab by Host Chrome extension. No data collection, no network requests, no tracking.">
+<link rel="canonical" href="https://alesiestu.github.io/tab-by-host/privacy.html">
+<style>
+  :root{color-scheme:light dark;--bg:#fbf8f4;--panel:#fff;--line:#e5ddd2;--text:#231c16;--muted:#6b5d4f;--accent:#b4762a}
+  @media(prefers-color-scheme:dark){:root{--bg:#16120f;--panel:#1f1a16;--line:#342b24;--text:#f5efe7;--muted:#b3a496;--accent:#e3a857}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+       font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif}
+  .wrap{max-width:760px;margin:auto;padding:0 24px 72px}
+  header{padding:48px 0 8px;border-bottom:1px solid var(--line);margin-bottom:32px}
+  h1{font-size:30px;line-height:1.2;margin:0 0 8px;letter-spacing:-.6px}
+  h2{font-size:19px;margin:40px 0 10px;letter-spacing:-.3px}
+  h3{font-size:15px;margin:26px 0 6px}
+  .sub{color:var(--muted);margin:0}
+  .meta{color:var(--muted);font-size:13px;margin:14px 0 0}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;display:block;overflow-x:auto}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:650;white-space:nowrap}
+  code{font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--panel);
+       border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+  a{color:var(--accent)}
+  .lead{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+        border-radius:9px;padding:16px 20px;margin:0 0 8px}
+  ul{padding-left:22px}
+  li{margin:5px 0}
+  footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .lang{font-size:13px;margin:0 0 26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Tab by Host — Privacy Policy</h1>
+  <p class="sub">Chrome extension that groups tabs by site host.</p>
+  <p class="meta">Last updated: 26 November 2026 · Extension version 1.1.0</p>
+</header>
+
+<p class="lang"><a href="#italiano">Versione italiana ↓</a></p>
+
+<p class="lead"><strong>Tab by Host does not collect, transmit or sell any data.</strong>
+It runs entirely in your browser: no server, no account, no telemetry, no remote libraries,
+no third-party code.</p>
+
+<h2>Summary</h2>
+<table>
+  <tr><th>Does any data leave your device?</th><td>No. The extension makes no network requests at all.</td></tr>
+  <tr><th>Is an account required?</th><td>No.</td></tr>
+  <tr><th>Is there analytics or tracking?</th><td>No.</td></tr>
+  <tr><th>Is anything synced to the cloud?</th><td>No. Local storage only, never <code>storage.sync</code>.</td></tr>
+  <tr><th>Is page content read?</th><td>No. The extension injects no scripts into pages.</td></tr>
+  <tr><th>Who can see your data?</th><td>Only you, in the Chrome profile on this computer.</td></tr>
+</table>
+
+<h2>Data processed</h2>
+<p>The extension processes two sets of data, both stored locally on your device.</p>
+
+<h3>1. The rules you create — local storage</h3>
+<p>Kept until you delete them or uninstall the extension.</p>
+<table>
+  <tr><th>Field</th><th>Content</th></tr>
+  <tr><td><code>host</code></td><td>The host you typed, e.g. <code>staging.example.com</code></td></tr>
+  <tr><td><code>group</code></td><td>The group name you chose</td></tr>
+  <tr><td><code>color</code></td><td>The colour you chose</td></tr>
+  <tr><td><code>includeSubdomains</code>, <code>enabled</code></td><td>Two switches</td></tr>
+  <tr><td><code>id</code></td><td>A random local identifier for the rule</td></tr>
+</table>
+<p>This is exactly what you entered. Nothing else is added.</p>
+
+<h3>2. Operational state — session storage</h3>
+<p>Cleared automatically by Chrome when you close the browser.</p>
+<ul>
+  <li>Tab-to-group association: numeric tab, group and window identifiers</li>
+  <li>Group names, used to find the right group in each window</li>
+  <li>Counters: how many tabs matched, how many were updated, whether errors occurred</li>
+</ul>
+<p>This exists so grouping survives Chrome suspending the extension's service worker,
+which can happen at any time.</p>
+
+<h2>What the extension does not do</h2>
+<p><strong>Visited addresses are not stored.</strong> The extension reads a tab's address,
+extracts the host, compares it with your rules and discards the address. Paths, query strings,
+page titles and browsing history are never stored and never used for matching.</p>
+
+<p><strong>No page content is read.</strong> The manifest declares no <code>content_scripts</code>
+and no <code>host_permissions</code>: the extension technically has no access to passwords,
+cookies, forms or site text.</p>
+
+<p><strong>No network connections.</strong> The Content Security Policy includes
+<code>connect-src 'none'</code>, which blocks any outgoing request at the browser level —
+even in the event of a bug.</p>
+
+<p><strong>Incognito windows are excluded</strong> (<code>"incognito": "not_allowed"</code>).</p>
+
+<h2>Permissions</h2>
+<table>
+  <tr><th>Permission</th><th>Why it is needed</th><th>What it does not allow</th></tr>
+  <tr><td><code>tabs</code></td><td>Read a tab's address to identify its host</td><td>Does not read page content</td></tr>
+  <tr><td><code>tabGroups</code></td><td>Create, name and colour tab groups</td><td>—</td></tr>
+  <tr><td><code>storage</code></td><td>Store your rules locally</td><td>No cloud sync</td></tr>
+  <tr><td><code>alarms</code></td><td>Retry operations Chrome temporarily refuses</td><td>No network activity</td></tr>
+</table>
+<p>No <code>host_permissions</code>, <code>scripting</code>, <code>cookies</code>,
+<code>history</code> or <code>webRequest</code> permissions are requested.</p>
+
+<h2>Data you export yourself</h2>
+<p><strong>Export JSON</strong> creates a file containing the hosts you configured. The file is
+saved wherever you choose; the extension never transmits it. Treat it like any other
+configuration file: if it contains internal company hosts, store it accordingly.</p>
+
+<h2>Deletion</h2>
+<p>Uninstalling the extension from <code>chrome://extensions</code> removes your rules and state.
+Tab groups already created remain in Chrome, because they belong to the browser and not to
+the extension.</p>
+
+<h2>Verifiability</h2>
+<p>You do not have to take this on trust. The
+<a href="https://github.com/alesiestu/tab-by-host">source code is public</a>, and these
+guarantees are enforced automatically on every change by a continuous integration check that
+fails if network calls, cloud storage, undeclared APIs or third-party runtime dependencies
+ever appear.</p>
+
+<h2>Contact</h2>
+<p>Questions or reports:
+<a href="https://www.iannaconealessandro.it/contatti/">iannaconealessandro.it/contatti</a>
+or the <a href="https://github.com/alesiestu/tab-by-host/issues">issue tracker</a>.</p>
+
+<hr style="border:0;border-top:1px solid var(--line);margin:56px 0 0">
+
+<h1 id="italiano" style="margin-top:44px">Informativa sulla privacy</h1>
+
+<p class="lead"><strong>Tab by Host non raccoglie, non trasmette e non vende alcun dato.</strong>
+Funziona interamente nel browser: nessun server, account, telemetria, libreria remota o
+codice di terze parti.</p>
+
+<h2>In breve</h2>
+<table>
+  <tr><th>I dati lasciano il dispositivo?</th><td>No. L'estensione non effettua alcuna richiesta di rete.</td></tr>
+  <tr><th>Serve un account?</th><td>No.</td></tr>
+  <tr><th>C'è telemetria o tracciamento?</th><td>No.</td></tr>
+  <tr><th>I dati sono sincronizzati sul cloud?</th><td>No. Solo archiviazione locale, mai <code>storage.sync</code>.</td></tr>
+  <tr><th>Vengono letti i contenuti delle pagine?</th><td>No. Nessuno script viene iniettato nelle pagine.</td></tr>
+  <tr><th>Chi può vedere i dati?</th><td>Solo tu, nel profilo Chrome di questo computer.</td></tr>
+</table>
+
+<h2>Dati trattati</h2>
+
+<h3>1. Le regole che crei — archiviazione locale</h3>
+<p>Conservate finché non le elimini o disinstalli l'estensione: l'host che hai inserito, il nome
+del gruppo, il colore, due interruttori e un identificativo casuale. Sono esattamente i dati che
+hai digitato tu, nessun altro campo viene aggiunto.</p>
+
+<h3>2. Stato operativo — archiviazione di sessione</h3>
+<p>Cancellato automaticamente da Chrome alla chiusura del browser: associazione scheda-gruppo
+(identificativi numerici), nomi dei gruppi e contatori delle operazioni. Serve a far sopravvivere
+il raggruppamento alla sospensione del service worker da parte di Chrome.</p>
+
+<h2>Cosa non viene fatto</h2>
+<p><strong>Gli indirizzi visitati non vengono memorizzati.</strong> L'estensione legge l'indirizzo
+di una scheda, ne estrae l'host, lo confronta con le regole e lo scarta. Percorsi, query string,
+titolo della pagina e cronologia non vengono mai salvati né usati per la corrispondenza.</p>
+
+<p><strong>Nessun contenuto delle pagine viene letto.</strong> Il manifest non dichiara
+<code>content_scripts</code> né <code>host_permissions</code>: l'estensione non ha tecnicamente
+accesso a password, cookie, moduli o testo dei siti.</p>
+
+<p><strong>Nessuna connessione di rete.</strong> La Content Security Policy include
+<code>connect-src 'none'</code>, che impedisce qualunque richiesta in uscita a livello di browser.</p>
+
+<p><strong>Le finestre in incognito sono escluse.</strong></p>
+
+<h2>Permessi</h2>
+<table>
+  <tr><th>Permesso</th><th>Utilizzo</th><th>Cosa non comporta</th></tr>
+  <tr><td><code>tabs</code></td><td>Leggere l'indirizzo per riconoscere l'host</td><td>Non legge il contenuto delle pagine</td></tr>
+  <tr><td><code>tabGroups</code></td><td>Creare, nominare e colorare i gruppi</td><td>—</td></tr>
+  <tr><td><code>storage</code></td><td>Conservare le regole in locale</td><td>Nessuna sincronizzazione cloud</td></tr>
+  <tr><td><code>alarms</code></td><td>Riprovare operazioni rifiutate temporaneamente</td><td>Nessuna attività di rete</td></tr>
+</table>
+
+<h2>Dati che esporti tu</h2>
+<p><strong>Esporta JSON</strong> crea un file con i nomi degli host che hai configurato. Il file
+viene salvato dove scegli tu e l'estensione non lo trasmette da nessuna parte. Conservalo come
+gli altri file di configurazione.</p>
+
+<h2>Cancellazione</h2>
+<p>Disinstallare l'estensione da <code>chrome://extensions</code> elimina regole e stato. I gruppi
+di schede già creati restano in Chrome, perché appartengono al browser.</p>
+
+<h2>Verificabilità</h2>
+<p>Non devi fidarti sulla parola: il
+<a href="https://github.com/alesiestu/tab-by-host">codice sorgente è pubblico</a> e queste
+garanzie sono verificate automaticamente a ogni modifica da un controllo che fallisce se
+compaiono chiamate di rete, archiviazione cloud, API non dichiarate o dipendenze di terze parti.</p>
+
+<h2>Contatti</h2>
+<p>Domande o segnalazioni:
+<a href="https://www.iannaconealessandro.it/contatti/">iannaconealessandro.it/contatti</a>
+oppure le <a href="https://github.com/alesiestu/tab-by-host/issues">issue del progetto</a>.</p>
+
+<footer>
+  Tab by Host · <a href="https://github.com/alesiestu/tab-by-host">GitHub</a> ·
+  <a href="https://www.iannaconealessandro.it/contatti/">Assistenza</a> ·
+  MIT © 2026 Alessandro Iannacone
+</footer>
+
+</div>
+</body>
+</html>
