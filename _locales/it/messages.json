@@ -71,6 +71,8 @@
   "tipHeading": { "message": "Un gruppo, più host" },
   "tipBody": { "message": "Assegna lo stesso nome e lo stesso colore a più regole per riunire, per esempio, frontend e API." },
   "footer": { "message": "Le schede fissate sono escluse. I gruppi rimangono nella loro finestra." },
+  "madeBy": { "message": "Realizzato da" },
+  "sourceCode": { "message": "Codice sorgente" },
 
   "popupTagline": { "message": "Ogni host, nel gruppo giusto." },
   "popupLoading": { "message": "Caricamento…" },

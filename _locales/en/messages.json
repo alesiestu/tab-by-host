@@ -71,6 +71,8 @@
   "tipHeading": { "message": "One group, several hosts" },
   "tipBody": { "message": "Give the same name and color to several rules to bring together, for example, frontend and API." },
   "footer": { "message": "Pinned tabs are excluded. Groups stay in their own window." },
+  "madeBy": { "message": "Made by" },
+  "sourceCode": { "message": "Source code" },
 
   "popupTagline": { "message": "Every host in the right group." },
   "popupLoading": { "message": "Loading…" },
