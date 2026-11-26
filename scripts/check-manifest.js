@@ -1,6 +1,7 @@
-// Validates manifest.json without loading the extension in Chrome.
+// Validates manifest.json without loading the extension in Chrome, and enforces
+// the privacy promises in PRIVACY.md: no network, no cloud sync, no third-party code.
 // Catches the mistakes that otherwise surface only at "Carica estensione non pacchettizzata".
-import { readFile, access } from "node:fs/promises";
+import { readFile, access, readdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -62,6 +63,29 @@ if (manifest) {
   for (const directive of ["script-src 'self'", "object-src 'none'", "connect-src 'none'"]) {
     if (!csp.includes(directive)) fail(`content_security_policy.extension_pages deve contenere "${directive}".`);
   }
+}
+
+// PRIVACY.md promises these never appear. Enforce it instead of trusting a review.
+const sources = (await readdir(root)).filter(name => name.endsWith(".js"));
+const banned = [
+  [/\bfetch\s*\(/, "fetch()"],
+  [/\bXMLHttpRequest\b/, "XMLHttpRequest"],
+  [/\bWebSocket\b/, "WebSocket"],
+  [/\bsendBeacon\b/, "navigator.sendBeacon"],
+  [/\bEventSource\b/, "EventSource"],
+  [/chrome\.storage\.sync\b/, "chrome.storage.sync (sincronizzazione cloud)"],
+  [/chrome\.identity\b/, "chrome.identity"],
+  [/chrome\.(history|cookies|webRequest|scripting)\b/, "API non dichiarata nei permessi"]
+];
+for (const name of sources) {
+  const source = await readFile(resolve(root, name), "utf8");
+  for (const [pattern, label] of banned) {
+    if (pattern.test(source)) fail(`${name}: usa ${label}, in contrasto con PRIVACY.md.`);
+  }
+}
+
+if (pkg && Object.keys(pkg.dependencies ?? {}).length) {
+  fail("package.json: dependencies non vuote. L'estensione deve restare senza codice di terze parti.");
 }
 
 if (errors.length) {

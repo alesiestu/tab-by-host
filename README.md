@@ -94,6 +94,8 @@ Il file esportato contiene i nomi degli host: conservalo come gli altri file di 
 
 L’estensione funziona interamente nel browser: nessun server, account, libreria remota o telemetria.
 Non esegue script nelle pagine e non legge password, cookie, moduli o contenuti dei siti.
+Gli indirizzi delle schede non vengono memorizzati: viene estratto l’host, confrontato con le regole e scartato.
+Il dettaglio completo è in [PRIVACY.md](PRIVACY.md), ed è verificato automaticamente a ogni modifica.
 Richiede questi permessi Chrome:
 
 | Permesso | Utilizzo |
@@ -133,6 +135,7 @@ npm run check:manifest
 ```
 
 Il controllo verifica versione allineata a `package.json`, file referenziati esistenti, permessi attesi e direttive CSP.
+Verifica inoltre le promesse di [PRIVACY.md](PRIVACY.md): assenza di chiamate di rete, di `chrome.storage.sync` e di dipendenze di terze parti.
 Entrambi i comandi vengono eseguiti automaticamente su ogni push e pull request.
 
 Verifica iniziale consigliata nel browser:
