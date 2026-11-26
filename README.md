@@ -1,5 +1,8 @@
 # Host Groups
 
+[![test](https://github.com/alesiestu/tab-by-host/actions/workflows/test.yml/badge.svg)](https://github.com/alesiestu/tab-by-host/actions/workflows/test.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Estensione Chrome per raggruppare automaticamente le schede in base all’host.
 Puoi gestire tutte le regole dalle impostazioni: **host, nome del gruppo e colore**.
 Nessun dominio è preconfigurato.
@@ -157,3 +160,16 @@ Verifica iniziale consigliata nel browser:
 5. Sospendi l’automazione e apri un’altra scheda: deve rimanere dov’è; riattivando l’automazione deve raggrupparsi.
 
 API ufficiali: [Tabs](https://developer.chrome.com/docs/extensions/reference/api/tabs), [Tab Groups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups), [Storage](https://developer.chrome.com/docs/extensions/reference/api/storage).
+
+## Autore
+
+**Alessandro Iannacone** — DevOps Engineer: Linux, Cloud, Automazione, CI/CD e Sicurezza.
+
+- GitHub: [@alesiestu](https://github.com/alesiestu)
+- Sito: [iannaconealessandro.it](https://www.iannaconealessandro.it)
+
+Segnalazioni e proposte: [issue del progetto](https://github.com/alesiestu/tab-by-host/issues).
+
+## Licenza
+
+Distribuito con licenza [MIT](LICENSE). © 2026 Alessandro Iannacone.

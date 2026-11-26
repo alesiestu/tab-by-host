@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
+  "author": { "email": "iannacone.alessandro@gmail.com" },
+  "homepage_url": "https://github.com/alesiestu/tab-by-host",
   "minimum_chrome_version": "120",
   "permissions": ["tabs", "tabGroups", "storage", "alarms"],
   "background": { "service_worker": "background.js", "type": "module" },
