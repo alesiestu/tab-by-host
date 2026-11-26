@@ -5,6 +5,8 @@ export function t(key, ...substitutions) {
   return message || key;
 }
 
+// Storage keys keep their original names on purpose: renaming them would
+// orphan the rules of anyone who already installed the extension.
 export const CONFIG_KEY = "hostGroupsConfig";
 export const SESSION_KEY = "hostGroupsSession";
 export const STATUS_KEY = "hostGroupsStatus";

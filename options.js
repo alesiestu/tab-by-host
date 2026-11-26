@@ -163,7 +163,7 @@ $("test-url").addEventListener("input", updateTest);
 $("export").addEventListener("click", () => {
   const blob = new Blob([JSON.stringify(config, null, 2) + "\n"], { type: "application/json" });
   const url = URL.createObjectURL(blob); const anchor = document.createElement("a");
-  anchor.href = url; anchor.download = "host-groups-rules.json"; anchor.click();
+  anchor.href = url; anchor.download = "tab-by-host-rules.json"; anchor.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 $("import").addEventListener("click", () => $("import-file").click());
