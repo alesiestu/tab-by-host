@@ -54,6 +54,51 @@ test("se una porta è specificata viene rispettata, compresa quella predefinita"
   assert.equal(matchRule("https://console.example.com", plain), null);
 });
 
+// A service such as cPanel (2083) or WHM (2087) answers on a fixed port across
+// many hostnames: the port alone must be expressible as a condition.
+test("una regola di sola porta vale per qualsiasi host su quella porta", () => {
+  assert.deepEqual(parseHost(":2083"), { hostname: "", port: "2083", host: ":2083" });
+  assert.equal(parseHost(" :02083 ").host, ":2083");
+  const rules = compiled(rule({ host: ":2083", group: "cPanel", color: "orange" }));
+  for (const url of ["https://server1.example.com:2083/", "http://192.168.1.20:2083/login", "https://altro.test:2083"]) {
+    assert.equal(matchRule(url, rules)?.group, "cPanel", url);
+  }
+  for (const url of ["https://server1.example.com", "https://server1.example.com:2087", "http://server1.example.com:20830"]) {
+    assert.equal(matchRule(url, rules), null, url);
+  }
+});
+
+test("la porta di default è esplicita anche per le regole di sola porta", () => {
+  const https = compiled(rule({ host: ":443" }));
+  assert.ok(matchRule("https://qualsiasi.example.com/path", https));
+  assert.equal(matchRule("http://qualsiasi.example.com", https), null);
+  const http = compiled(rule({ host: ":80" }));
+  assert.ok(matchRule("http://qualsiasi.example.com", http));
+  assert.equal(matchRule("https://qualsiasi.example.com", http), null);
+});
+
+test("una regola di sola porta rifiuta valori non numerici o fuori intervallo", () => {
+  for (const value of [":", ":0", ":65536", ":abc", ":80a", ": 80", ":-1", ":8.0", "::1"]) {
+    assert.throws(() => parseHost(value), undefined, value);
+  }
+});
+
+// includeSubdomains has no meaning without a hostname: it must be stored as
+// false, otherwise export/import would carry a flag the UI never shows.
+test("una regola di sola porta non conserva il flag dei sottodomini", () => {
+  const [stored] = normalizeConfig({ ...defaultConfig(), rules: [rule({ host: ":2087", includeSubdomains: true })] }).rules;
+  assert.equal(stored.includeSubdomains, false);
+  assert.equal(stored.host, ":2087");
+});
+
+test("una regola sull’host specifico batte quella di sola porta se viene prima", () => {
+  const port = rule({ id: "port", host: ":2083", group: "cPanel", color: "orange" });
+  const host = rule({ id: "host", host: "cliente.example.com:2083", group: "Cliente", color: "blue" });
+  assert.equal(matchRule("https://cliente.example.com:2083", compiled(host, port))?.id, "host");
+  assert.equal(matchRule("https://cliente.example.com:2083", compiled(port, host))?.id, "port");
+  assert.equal(matchRule("https://altro.example.com:2083", compiled(host, port))?.id, "port");
+});
+
 test("vince la prima regola attiva e l’ordine è deterministico", () => {
   const staging = rule({ id: "staging", host: "staging.example.com", group: "Staging", color: "orange" });
   const production = rule({ id: "prod", host: "example.com", includeSubdomains: true });

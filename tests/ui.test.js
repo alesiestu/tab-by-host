@@ -44,6 +44,16 @@ test("la prova distingue le porte come il raggruppamento", () => {
   assert.equal(matchRule(resolveTestUrl("localhost:4000").url, rules), null);
 });
 
+// ":2083" is a valid rule but not something the user can visit: the tester must
+// refuse it instead of inventing a host and reporting a misleading match.
+test("la prova rifiuta la sola porta ma applica le regole di sola porta", () => {
+  assert.throws(() => resolveTestUrl(":2083"));
+  const rules = compileRules(config(rule({ host: ":2083", group: "cPanel", color: "orange" })).rules);
+  assert.equal(matchRule(resolveTestUrl("server.example.com:2083").url, rules)?.group, "cPanel");
+  assert.equal(matchRule(resolveTestUrl("https://altro.test:2083/login").url, rules)?.group, "cPanel");
+  assert.equal(matchRule(resolveTestUrl("server.example.com:2087").url, rules), null);
+});
+
 test("l’importazione sostituisce le regole e conserva lo stato dell’automazione", () => {
   const current = config(rule());
   const imported = { ...config(rule({ id: "imported", host: "altro.example.com", group: "Altro", color: "blue" })), enabled: true };

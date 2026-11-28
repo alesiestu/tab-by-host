@@ -3,6 +3,23 @@
 Il formato segue [Keep a Changelog](https://keepachangelog.com/it/1.1.0/)
 e il progetto usa il [versionamento semantico](https://semver.org/lang/it/).
 
+## [1.2.0] — 2026-11-26
+
+### Aggiunto
+
+- **Regole di sola porta** (#28). Scrivendo soltanto la porta nel campo host,
+  ad esempio `:2083`, la regola vale per qualsiasi host su quella porta. Serve
+  per i servizi che rispondono sempre sulla stessa porta su server diversi,
+  come cPanel (`:2083`) e WHM (`:2087`).
+
+### Modificato
+
+- Nelle regole di sola porta l'opzione **Includi anche i sottodomini** non si
+  applica: viene nascosta nell'editor e salvata come disattivata, così che
+  esportazione e reimportazione non trasportino un'opzione senza effetto.
+- **Prova un indirizzo** rifiuta la sola porta e chiede un indirizzo completo:
+  `:2083` è una regola valida, ma non un indirizzo visitabile.
+
 ## [1.1.0] — 2026-11-26
 
 Prima release pubblica. L'estensione cambia nome e interfaccia; il comportamento

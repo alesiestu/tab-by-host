@@ -76,6 +76,9 @@
   "ruleWithSubdomains": {
     "message": "Host + subdomains"
   },
+  "rulePortOnly": {
+    "message": "Any host on this port"
+  },
   "ruleEdit": {
     "message": "Edit"
   },
@@ -216,7 +219,7 @@
     "message": "Host"
   },
   "fieldHostHelp": {
-    "message": "Exact host, IP or localhost. You can specify a port or paste a full URL."
+    "message": "Exact host, IP or localhost. You can specify a port or paste a full URL. Enter a port alone, such as :2083, to match any host on that port."
   },
   "fieldSubdomains": {
     "message": "Include subdomains too"
@@ -350,6 +353,12 @@
   },
   "errPortMissing": {
     "message": "Specify a valid port after the colon."
+  },
+  "errPortOnly": {
+    "message": "For a port-only rule use digits only, for example :2083."
+  },
+  "errTestPortOnly": {
+    "message": "Enter a full address to test, for example server.example.com:2083."
   },
   "errConfigShape": {
     "message": "Invalid configuration: unsupported format or version."
