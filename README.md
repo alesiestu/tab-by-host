@@ -53,6 +53,7 @@ Questi indirizzi sono soltanto esempi: sostituiscili con gli host reali.
 | `progetto.example.com` | Progetto · PRODUZIONE | Rosso |
 | `staging.example.com` | Progetto · STAGING | Arancione |
 | `localhost:3000` | Sviluppo locale | Verde |
+| `:2083` | cPanel | Arancione |
 
 Le regole si possono **modificare, sospendere, eliminare e riordinare**.
 Se più regole corrispondono, vince la **prima regola attiva dall’alto**.
@@ -64,6 +65,11 @@ Per riunire più host nello stesso gruppo usa lo **stesso nome e colore** nelle 
 - `staging.progetto.example.com` rimane separato, finché non attivi **Includi anche i sottodomini** sulla regola `progetto.example.com`.
 - Abilitare i sottodomini include sia l’host stesso sia tutti i suoi sottodomini.
 - `localhost:3000` corrisponde soltanto alla porta 3000; `localhost` corrisponde a tutte le sue porte.
+- Indicando **soltanto la porta**, ad esempio `:2083`, la regola vale per **qualsiasi host** su quella porta:
+  utile per i servizi che rispondono sempre sulla stessa porta su server diversi, come cPanel (`:2083`)
+  e WHM (`:2087`). Per queste regole l’opzione sui sottodomini non si applica e non viene mostrata.
+- `:443` e `:80` sono porte valide, ma corrispondono rispettivamente a tutti gli indirizzi HTTPS e HTTP:
+  se vuoi restringere il campo, metti sopra le regole più specifiche.
 - Sono supportati IP, host interni, IPv6 tra parentesi quadre e nomi internazionali.
 - Puoi incollare un URL completo: vengono conservati soltanto host ed eventuale porta esplicita.
 - Path, query string e titolo della pagina non sono usati per la corrispondenza.

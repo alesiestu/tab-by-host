@@ -28,6 +28,19 @@ export function defaultConfig() {
   return { version: 1, enabled: true, rules: [] };
 }
 
+// A leading colon (":2083") means "any host on this port". A service such as
+// cPanel or WHM answers on a fixed port across many different hostnames, so the
+// port alone is the useful condition. Returned with an empty hostname, which is
+// what matchRule reads to skip the host comparison.
+function parsePortOnly(value) {
+  const digits = value.slice(1);
+  if (!digits) throw new Error(t("errPortMissing"));
+  if (!/^\d+$/.test(digits)) throw new Error(t("errPortOnly"));
+  const port = Number(digits);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error(t("errPortRange"));
+  return { hostname: "", port: String(port), host: `:${port}` };
+}
+
 // Hostname comparisons use the URL parser, never a substring of the full URL.
 // Keeping the port as a separate condition also supports localhost:3000.
 export function parseHost(input) {
@@ -35,6 +48,7 @@ export function parseHost(input) {
   const value = input.trim();
   const hasScheme = /^https?:\/\//i.test(value);
   if (/\s|[\\*@]/u.test(value)) throw new Error(t("errHostChars"));
+  if (value.startsWith(":")) return parsePortOnly(value);
   let url;
   try { url = new URL(hasScheme ? value : `http://${value}`); }
   catch { throw new Error(t("errHostParse")); }
@@ -89,7 +103,10 @@ export function normalizeConfig(input) {
       throw new Error(t("errGroupColor", group));
     }
     groupColors.set(group, rule.color);
-    return { id: rule.id, host: parsed.host, group, color: rule.color, includeSubdomains: rule.includeSubdomains, enabled: rule.enabled };
+    // Subdomains are meaningless without a hostname: stored as false so the
+    // rule round-trips through export/import unchanged.
+    const includeSubdomains = parsed.hostname === "" ? false : rule.includeSubdomains;
+    return { id: rule.id, host: parsed.host, group, color: rule.color, includeSubdomains, enabled: rule.enabled };
   });
   return { version: 1, enabled: input.enabled, rules };
 }
@@ -105,7 +122,10 @@ export function matchRule(urlValue, compiledRules) {
   const host = url.hostname.toLowerCase().replace(/\.$/, "");
   const port = url.port || (url.protocol === "https:" ? "443" : "80");
   return compiledRules.find(rule =>
-    (host === rule.hostname || (rule.includeSubdomains && host.endsWith(`.${rule.hostname}`))) &&
+    // An empty hostname is a port-only rule: the port is the whole condition.
+    (rule.hostname === "" ||
+      host === rule.hostname ||
+      (rule.includeSubdomains && host.endsWith(`.${rule.hostname}`))) &&
     (!rule.port || rule.port === port)
   ) || null;
 }
@@ -115,6 +135,9 @@ export function matchRule(urlValue, compiledRules) {
 // matchRule needs an absolute URL, but the user may type just "example.com".
 export function resolveTestUrl(input) {
   const parsed = parseHost(input);
+  // ":2083" is a valid rule but not an address anyone can visit: without a host
+  // there is nothing to build a URL from, so the tester must say so.
+  if (parsed.hostname === "") throw new Error(t("errTestPortOnly"));
   return { parsed, url: /^https?:\/\//i.test(input.trim()) ? input.trim() : `http://${parsed.host}` };
 }
 

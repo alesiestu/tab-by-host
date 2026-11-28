@@ -72,7 +72,8 @@ function render() {
     const stateText = document.createElement("span"); stateText.textContent = t(rule.enabled ? "ruleActive" : "rulePaused");
     stateLabel.append(enabled, stateText); header.append(identity, stateLabel);
     const host = document.createElement("code"); host.className = "rule-host"; host.textContent = rule.host;
-    const detail = document.createElement("p"); detail.className = "rule-detail"; detail.textContent = t(rule.includeSubdomains ? "ruleWithSubdomains" : "ruleHostOnly");
+    const detail = document.createElement("p"); detail.className = "rule-detail";
+    detail.textContent = t(rule.host.startsWith(":") ? "rulePortOnly" : rule.includeSubdomains ? "ruleWithSubdomains" : "ruleHostOnly");
     const actions = document.createElement("div"); actions.className = "rule-actions";
     actions.append(makeButton(t("ruleEdit"), () => edit(rule)), makeButton(t(deleteArmed.has(rule.id) ? "ruleDeleteConfirm" : "ruleDelete"), async () => {
       if (!deleteArmed.has(rule.id)) { deleteArmed.add(rule.id); render(); return; }
@@ -112,12 +113,21 @@ function edit(rule) {
   $("color").value = rule.color; $("subdomains").checked = rule.includeSubdomains;
   $("editor-heading").textContent = t("editorEditHeading"); $("editor-eyebrow").textContent = t("editorEditEyebrow");
   $("save-rule").textContent = t("saveChanges"); $("cancel-edit").hidden = false; $("form-error").hidden = true;
-  updatePreview(); $("host").focus();
+  updatePreview(); updateSubdomainsField(); $("host").focus();
 }
 
 function updatePreview() {
   $("preview-name").textContent = $("group").value.trim() || t("previewPlaceholder");
   $("preview").style.setProperty("--rule-color", COLORS[$("color").value]?.hex || COLORS.orange.hex);
+  updateSubdomainsField();
+}
+
+// "Include subdomains" has no meaning for a port-only rule such as :2083:
+// hide it rather than leave a checkbox that silently does nothing.
+function updateSubdomainsField() {
+  const portOnly = $("host").value.trim().startsWith(":");
+  $("subdomains-field").hidden = portOnly;
+  if (portOnly) $("subdomains").checked = false;
 }
 
 function updateTest() {
@@ -137,6 +147,7 @@ for (const [value, color] of Object.entries(COLORS)) {
   const option = document.createElement("option"); option.value = value; option.textContent = color.label; $("color").append(option);
 }
 $("group").addEventListener("input", updatePreview); $("color").addEventListener("change", updatePreview);
+$("host").addEventListener("input", updateSubdomainsField);
 $("add-rule").addEventListener("click", () => resetEditor(true)); $("first-rule").addEventListener("click", () => resetEditor(true));
 $("cancel-edit").addEventListener("click", () => resetEditor());
 $("rule-form").addEventListener("submit", async event => {

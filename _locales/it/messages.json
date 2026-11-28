@@ -76,6 +76,9 @@
   "ruleWithSubdomains": {
     "message": "Host + sottodomini"
   },
+  "rulePortOnly": {
+    "message": "Qualsiasi host su questa porta"
+  },
   "ruleEdit": {
     "message": "Modifica"
   },
@@ -216,7 +219,7 @@
     "message": "Host"
   },
   "fieldHostHelp": {
-    "message": "Host esatto, IP o localhost. Puoi specificare una porta o incollare un URL completo."
+    "message": "Host esatto, IP o localhost. Puoi specificare una porta o incollare un URL completo. Indica solo la porta, ad esempio :2083, per qualsiasi host su quella porta."
   },
   "fieldSubdomains": {
     "message": "Includi anche i sottodomini"
@@ -350,6 +353,12 @@
   },
   "errPortMissing": {
     "message": "Indica una porta valida dopo i due punti."
+  },
+  "errPortOnly": {
+    "message": "Per una regola di sola porta usa solo cifre, ad esempio :2083."
+  },
+  "errTestPortOnly": {
+    "message": "Indica un indirizzo completo da provare, ad esempio server.example.com:2083."
   },
   "errConfigShape": {
     "message": "Configurazione non valida: formato o versione non supportati."

@@ -1,6 +1,6 @@
 {
   "name": "tab-by-host",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "description": "Chrome extension that groups tabs by host, with rules for name and color.",
